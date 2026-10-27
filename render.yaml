@@ -1,0 +1,15 @@
+# Render: site estático (sem servidor). O Render lê este arquivo do repositório.
+services:
+  - type: web
+    name: mapa-shopping
+    runtime: static
+    buildCommand: echo "sem build"
+    staticPublishPath: .
+    headers:
+      # Sempre buscar a versão nova do sw.js e do index.html
+      - path: /sw.js
+        name: Cache-Control
+        value: no-cache
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache
