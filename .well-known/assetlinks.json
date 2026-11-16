@@ -1,10 +1,8 @@
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.erickcripto.mapashopping",
-      "sha256_cert_fingerprints": ["COLE_AQUI_A_IMPRESSAO_DIGITAL_SHA256_DO_PWABUILDER"]
-    }
-  }
-]
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.onrender.mapa_shopping.twa",
+        "sha256_cert_fingerprints": ["E8:14:13:A2:E8:2D:B5:E9:11:FE:15:55:AD:8E:0D:F1:43:F1:9E:01:66:2B:B4:AC:49:3D:CF:B1:46:CE:4F:AC"]
+      }
+    }]
