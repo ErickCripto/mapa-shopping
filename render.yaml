@@ -13,3 +13,7 @@ services:
       - path: /index.html
         name: Cache-Control
         value: no-cache
+      # Arquivo que liga o app Android ao site (tira a barra do navegador do app)
+      - path: /.well-known/assetlinks.json
+        name: Content-Type
+        value: application/json

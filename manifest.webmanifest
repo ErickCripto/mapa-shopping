@@ -1,16 +1,30 @@
 {
+  "id": "/",
   "name": "Mapa Shopping",
   "short_name": "Mapa Shopping",
-  "description": "Navegação interna do Jockey Plaza (projeto acadêmico)",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#0A7C72",
+  "description": "Navegação interna do Jockey Plaza: busca de lojas e produtos, rotas, GPS e vagas (projeto acadêmico).",
   "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1D4ED8",
+  "categories": ["navigation", "shopping", "travel"],
+  "prefer_related_applications": false,
   "icons": [
-    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
     {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "screenshots": [
+    {"src": "screenshots/tela-mapa.png", "sizes": "824x1740", "type": "image/png", "form_factor": "narrow", "label": "Mapa do piso com busca de lojas"},
+    {"src": "screenshots/tela-vagas.png", "sizes": "824x1740", "type": "image/png", "form_factor": "narrow", "label": "Busca de vagas no estacionamento"}
+  ],
+  "shortcuts": [
+    {"name": "Buscar vaga", "short_name": "Vagas", "url": "/#vagas", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Pontos QR", "short_name": "QR", "url": "/#qr", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]}
   ]
 }
