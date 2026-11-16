@@ -1,6 +1,6 @@
 // Ao publicar versão nova, trocar o número abaixo.
-const CACHE = "mapa-shopping-v19";
-const FILES = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "mascote/bandi-oi.webp", "mascote/bandi-rota.webp", "mascote/bandi-ops.webp", "mascote/bandi-chegou.webp", "mascote/pixel/bandi-oi.webp", "mascote/pixel/bandi-rota.webp", "mascote/pixel/bandi-ops.webp", "mascote/pixel/bandi-chegou.webp", "mascote/pixel/bandi-pensando.webp", "mascote/pixel/bandi-apontar.webp", "mascote/pixel/bandi-triste.webp", "mascote/pixel/bandi-danca.webp"];
+const CACHE = "mapa-shopping-v20";
+const FILES = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))); self.clients.claim(); });
 self.addEventListener("fetch", e => {
