@@ -3699,31 +3699,31 @@ html.hc :is(.home .sbar,.floor-pill,.zoom-ctl button,.here-chip,.menu,.sresults,
 :root{
   --c-moda:#D30F45; --c-alim:#C93400; --c-bel:#8944AB; --c-dep:#3634A3; --c-tec:#0040DD; --c-casa:#008299;
   --c-inf:#A05A00; --c-lazer:#248A3D; --c-serv:#0071A4; --c-sani:#6C6C70; --c-acesso:#0C817B; --c-park:#3634A3;
-  --blk-ink:#1D1D1F; --blk-fill:#FFFFFF; --blk-plate:#FFFFFF;
+  --blk-ink:#1D1D1F; --blk-fill:#FFFFFF; --blk-plate:#FFFFFF; --blk-mix:15%; --blk-edge:60%;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --c-moda:#FF375F; --c-alim:#FF9F0A; --c-bel:#BF5AF2; --c-dep:#7D7AFF; --c-tec:#409CFF; --c-casa:#5DE6FF;
     --c-inf:#FFD60A; --c-lazer:#30D158; --c-serv:#64D2FF; --c-sani:#AEAEB2; --c-acesso:#63E6E2; --c-park:#7D7AFF;
-    --blk-ink:#F5F5F7; --blk-fill:#1C2730; --blk-plate:#FFFFFF;
+    --blk-ink:#FFFFFF; --blk-fill:#33414C; --blk-plate:#FFFFFF; --blk-mix:30%; --blk-edge:80%;
   }
 }
 :root[data-theme="dark"]{
   --c-moda:#FF375F; --c-alim:#FF9F0A; --c-bel:#BF5AF2; --c-dep:#7D7AFF; --c-tec:#409CFF; --c-casa:#5DE6FF;
   --c-inf:#FFD60A; --c-lazer:#30D158; --c-serv:#64D2FF; --c-sani:#AEAEB2; --c-acesso:#63E6E2; --c-park:#7D7AFF;
-  --blk-ink:#F5F5F7; --blk-fill:#1C2730; --blk-plate:#FFFFFF;
+  --blk-ink:#FFFFFF; --blk-fill:#33414C; --blk-plate:#FFFFFF; --blk-mix:30%; --blk-edge:80%;
 }
 
 /* Blocos das lojas: fundo quase branco com um toque da cor da categoria, contorno fino e nítido */
-svg.map .blk .store{fill:color-mix(in srgb,var(--bc) 8%,var(--blk-fill));stroke:color-mix(in srgb,var(--bc) 45%,var(--blk-fill));stroke-width:.3}
-svg.map .blk.anchor .store{fill:color-mix(in srgb,var(--bc) 12%,var(--blk-fill));stroke-width:.4}
-svg.map .blk.kq .store{stroke-dasharray:none;stroke-width:.25;fill:color-mix(in srgb,var(--bc) 5%,var(--blk-fill))}
-svg.map .blk.has-logo .store{fill:color-mix(in srgb,var(--bc) 4%,var(--blk-fill))}
+svg.map .blk .store{fill:color-mix(in srgb,var(--bc) var(--blk-mix),var(--blk-fill));stroke:color-mix(in srgb,var(--bc) var(--blk-edge),var(--blk-fill));stroke-width:.35}
+svg.map .blk.anchor .store{stroke-width:.45}
+svg.map .blk.kq .store{stroke-dasharray:none;stroke-width:.3}
+svg.map .blk.has-logo .store{fill:color-mix(in srgb,var(--bc) calc(var(--blk-mix) * .6),var(--blk-fill))}
 svg.map g.blk:hover .store{stroke:var(--bc);stroke-width:.5}
 svg.map g.blk.is-dest .store{fill:color-mix(in srgb,var(--dest) 22%,var(--blk-fill));stroke:var(--dest);stroke-width:.8}
 svg.map g.blk.dim{opacity:.28}
 /* Nomes: tinta escura (não mais rosa/laranja apagado), peso semibold, letras levemente justas */
-svg.map .bl{fill:var(--blk-ink);font-weight:700;letter-spacing:-.015em;paint-order:stroke;stroke:color-mix(in srgb,var(--bc) 6%,var(--blk-fill));stroke-width:.35px;stroke-linejoin:round}
+svg.map .bl{fill:var(--blk-ink);font-weight:700;letter-spacing:-.015em;paint-order:stroke;stroke:color-mix(in srgb,var(--bc) var(--blk-mix),var(--blk-fill));stroke-width:.35px;stroke-linejoin:round}
 /* Logo no bloco: placa branca só aparece no escuro (no claro o bloco já é claro) */
 svg.map .blk-t.lg{pointer-events:none}
 svg.map .lg-plate{fill:var(--blk-plate);opacity:0}
