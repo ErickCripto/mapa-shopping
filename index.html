@@ -951,6 +951,7 @@ svg.map .route-dash.rt-late{animation:rtFade .4s ease .55s both}
         <label><input type="checkbox" id="acc"> Rota acessível (sem escadas)</label>
         <a href="#qr">Pontos QR</a>
         <a href="#gps">Calibração do GPS</a>
+        <a href="editor/">Modo desenvolvedor: montar mapa pela planta baixa</a>
         <p class="menu-note">Projeto acadêmico, sem vínculo com o Jockey Plaza Shopping. Planta e lojas a partir do Mapa Virtual e do guia de lojas do shopping. Setores, tipos e ocupação das vagas são simulados. <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a></p>
       </div>
       <div class="cats" id="cats" role="group" aria-label="Categorias"></div>
@@ -1086,11 +1087,18 @@ svg.map .route-dash.rt-late{animation:rtFade .4s ease .55s both}
 <footer><span>Projeto acadêmico, sem vínculo com o Jockey Plaza Shopping. Piso e número das lojas conforme o site do shopping; posições no mapa aproximadas. Sua localização fica só no seu celular.</span> <a href="#qr">Pontos QR</a> · <a href="#gps">Calibração do GPS</a> · <a href="#mapa">Mapa</a></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="locais-extra.js"></script>
 <script>
 (function(){
 "use strict";
 const DEFAULT_BASE = "https://mapa-shopping.onrender.com/";
 const WALK = 1.2; // m/s
+// ===== Locais criados no Editor de Plantas (editor/) =====
+// Vêm do arquivo locais-extra.js (publicado para todos) e do que foi salvo neste aparelho pelo editor.
+const LOCAIS_EDITOR = (()=>{ const out=[];
+  try{ for(const v of (window.TAMANDUAI_LOCAIS||[])) out.push(v); }catch(e){}
+  try{ for(const v of JSON.parse(localStorage.getItem("tamanduai-locais-editor")||"[]")){ const i=out.findIndex(o=>o.id===v.id); if(i>=0) out[i]=v; else out.push(v); } }catch(e){}
+  return out.filter(v=>v&&v.id&&v.data&&Array.isArray(v.levels)&&v.levels.length); })();
 // ===== Planta do Jockey Plaza Shopping (Mapa Virtual do shopping + guia de lojas do site oficial) =====
 /* ==LOJAS-VISUAL== */
 /* ===== Lojas: logos oficiais + crachás (estilo Apple). Carregado ANTES do script principal. ===== */
@@ -1169,6 +1177,11 @@ const VENUES = [
   {id:"bacacheri", nome:"Aeroporto do Bacacheri", tipo:"Aeroportos", local:"Bacacheri · Curitiba"},
   {id:"unicuritiba", nome:"UniCuritiba (câmpus)", tipo:"Universidades", local:"Centro Universitário Curitiba"}
 ];
+// Locais montados no Editor de Plantas entram na mesma lista (substituem um local com o mesmo id)
+for(const v of LOCAIS_EDITOR){ const e={id:v.id,nome:v.nome,curto:v.curto||v.nome,tipo:v.tipo||"Outros",local:v.local||"Criado no Editor de Plantas",pronto:true,editor:true,
+  data:v.data,mw:v.MW,fh:v.FH,levels:v.levels.slice(),floorName:{...v.floorName},floorTag:{...(v.floorTag||{})},floorSub:{...(v.floorSub||{})},
+  defQR:((v.data.qrs||[])[0]||[])[0]||"",lat:v.lat,lng:v.lng,raio:v.raio,em:v.em||("em "+(v.curto||v.nome))};
+  const i=VENUES.findIndex(x=>x.id===v.id); if(i>=0) VENUES[i]=e; else VENUES.push(e); }
 const VENUE_KEY="tamanduai-local";
 // Qual mapa abrir, sem perguntar: 1) a plaquinha QR/NFC (o código diz o local), 2) o link (?local=),
 // 3) o último local usado. A troca pelo GPS acontece depois (ver detectVenueByGps).
@@ -1196,6 +1209,7 @@ const CATS = VENUE.cats || {
   "Casa e presentes":{v:"--c-casa"}, "Infantil":{v:"--c-inf"}, "Lazer":{v:"--c-lazer"}, "Serviços":{v:"--c-serv"},
   "Sanitários":{v:"--c-sani"}, "Acessos":{v:"--c-acesso"}, "Estacionamento":{v:"--c-park"}
 };
+for(const r of DATA.places) if(r[2]!=="Lojas"&&!CATS[r[2]]) CATS[r[2]]={v:"--c-serv"};   // categoria nova (ex.: criada no Editor de Plantas)
 const LEVELS = VENUE.levels || [2,1,0,-1];               // L2, L1, G1, G2
 const FLOOR_NAME = VENUE.floorName || {2:"Piso L2", 1:"Piso L1", 0:"Piso G1", "-1":"Piso G2"};
 const FS = f => FLOOR_NAME[f].replace("Piso ","");
@@ -1211,9 +1225,9 @@ const RENAME = {"Acesso Ao Estacionamento G1":"Rampa de veículos G1","Acesso Ao
 for(const r of DATA.places){
   let [id,name,cat,floor,x,y,w,h,rot,t,num,info,items]=r;
   name=RENAME[name]||name; cat=RECAT[name]||cat; if(cat==="Lojas") cat="Serviços";
-  const poi="wfscx".includes(t)||/^(Entrada [ABC]|Rampa de veículos)/.test(name);
+  const poi="wfscx".includes(t)||/^(Entrada [A-Z]|Rampa de veículos)/.test(name);
   if(/^Rampa de veículos/.test(name)){ cat="Estacionamento"; info="Entrada e saída de carros"; items="saída de carro,entrada de carro,rampa"; }
-  if(/^Entrada [ABC]$/.test(name)){ info="Entrada do shopping"; items="entrada,saída,porta"; }
+  if(/^Entrada [A-Z]$/.test(name)){ info=VENUE.id!=="jockey"?"Entrada":"Entrada do shopping"; items="entrada,saída,porta"; }
   if(t==="x"){ info="Rota de fuga · use só em emergências"; }
   P.push({id,name,cat,floor,pos:{x,y},door:{x,y},w,h,rot,t,poi,minor:t==="x",
     anchor:t==="L"||(!poi&&w*h>=170), kiosk:t==="q",
@@ -1249,6 +1263,7 @@ const FIXTURES = DATA.fixtures.map((fx,i)=>({...fx,id:"fx"+i}));
 for(const fx of FIXTURES){
   for(const f of fx.levels){ const [x,y]=fx.pts[f]; node(`${fx.id}-${f}`,f,x,y,fx.name); edge(`${fx.id}-${f}`,nearestC(f,x,y),"corredor"); }
   if(fx.kind==="elevador"){ for(const a of fx.levels) for(const b of fx.levels) if(a>b) edge(`${fx.id}-${a}`,`${fx.id}-${b}`,"elevador",{m:4*(a-b),name:"o "+fx.name.toLowerCase()}); }
+  else if(fx.kind==="escada"){ const L=fx.levels.slice().sort((a,b)=>a-b); for(let i=0;i<L.length-1;i++) edge(`${fx.id}-${L[i]}`,`${fx.id}-${L[i+1]}`,"escada",{m:10,name:`a ${fx.name.toLowerCase()}`}); }
   else if(fx.kind==="rolante2"){ const L=fx.levels.slice().sort((a,b)=>a-b); for(let i=0;i<L.length-1;i++) edge(`${fx.id}-${L[i]}`,`${fx.id}-${L[i+1]}`,"rolante",{m:16,name:`a escada rolante ${fx.name}`}); }
   else { edge(`${fx.id}-${fx.from}`,`${fx.id}-${fx.to}`,"rolante",{m:20,oneway:true,name:`a escada rolante ${fx.name}`}); }
 }
@@ -1259,7 +1274,7 @@ function qrLabel(f,x,y){
   const pois=P.filter(p=>p.floor===f&&p.poi&&!p.minor).map(p=>[p.name.replace(/ · Informações$/,""),p.pos.x,p.pos.y]);
   const fxs=FIXTURES.filter(fx=>fx.pts[f]).map(fx=>[fx.kind==="elevador"?fx.name:"Escada rolante "+fx.name.replace(/ \((subida|descida)\)/,""),...fx.pts[f]]);
   const st=P.filter(p=>p.floor===f&&!p.poi&&!p.minor).map(p=>["Em frente à "+p.name,p.pos.x,p.pos.y]);
-  const ent=P.filter(p=>p.floor===f&&/^Entrada [ABC]$/.test(p.name)).map(p=>[p.name,p.pos.x,p.pos.y]);
+  const ent=P.filter(p=>p.floor===f&&/^Entrada [A-Z]$/.test(p.name)).map(p=>[p.name,p.pos.x,p.pos.y]);
   return near(ent,14)||near(pois,10)||near(fxs,8)||near(st,40)||"Corredor";
 }
 const QR = DATA.qrs.map(([code,f,x,y])=>({code,floor:f,node:cnode(f,x,y),label:qrLabel(f,x,y)+" · "+FS(f)}));
@@ -2891,7 +2906,7 @@ const NEAR={
   baby:{t:"Fraldário",ic:"baby",f:p=>p.t==="f"},
   pay:{t:"Caixa do estacionamento",ic:"pay",f:p=>p.t==="c"},
   sac:{t:"SAC",ic:"info",f:p=>p.t==="s"},
-  door:{t:"Saída",ic:"door",f:p=>/^Entrada [ABC]$/.test(p.name)},
+  door:{t:"Saída",ic:"door",f:p=>/^Entrada [A-Z]$/.test(p.name)},
   food:{t:"Praça de alimentação",ic:"food",f:p=>p.t==="T"}
 };
 function nearestOf(kind){
