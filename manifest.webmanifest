@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Mapa Shopping",
-  "short_name": "Mapa Shopping",
-  "description": "Navegação interna do Jockey Plaza: busca de lojas e produtos, rotas, GPS e vagas (projeto acadêmico).",
+  "name": "Tamanduaí",
+  "short_name": "Tamanduaí",
+  "description": "GPS interno com o Bandi, o tamanduá-bandeira: lojas, portões e salas em shoppings, aeroportos e faculdade em Curitiba (projeto acadêmico).",
   "lang": "pt-BR",
   "dir": "ltr",
   "start_url": "/",
